@@ -8,7 +8,7 @@ export default async function MujeresPage() {
 
   return (
     <PersonManagement 
-      title="Mujeres Publicadoras" 
+      title="Publicadoras" 
       initialData={data}
       roleOptions={['Publicadora', 'Acompañante']}
       tipo="MUJER"

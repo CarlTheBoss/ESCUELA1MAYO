@@ -10,12 +10,13 @@ export async function getPersonas(tipo: 'MUJER' | 'HOMBRE') {
     orderBy: { createdAt: 'desc' },
   });
 
-  return personas.map(p => ({
+  return personas.map((p: any) => ({
     ...p,
     fechaUltimaAsignacion: p.fechaUltimaAsignacion.toISOString().split('T')[0],
     sala: p.sala as any,
     rol: p.rol as any,
     ultimoDiscurso5Min: p.ultimoDiscurso5Min ? p.ultimoDiscurso5Min.toISOString().split('T')[0] : undefined,
+    salaUltimoDiscurso: p.salaUltimoDiscurso as any,
   }));
 }
 
@@ -31,6 +32,7 @@ export async function createPersona(data: Persona, tipo: 'MUJER' | 'HOMBRE') {
       frecuencia: data.frecuencia,
       observacion: data.observacion,
       ultimoDiscurso5Min: data.ultimoDiscurso5Min ? new Date(data.ultimoDiscurso5Min) : null,
+      salaUltimoDiscurso: data.salaUltimoDiscurso || null,
     },
   });
   revalidatePath(tipo === 'MUJER' ? '/mujeres' : '/hombres');
@@ -48,6 +50,7 @@ export async function updatePersona(data: Persona) {
       frecuencia: data.frecuencia,
       observacion: data.observacion,
       ultimoDiscurso5Min: data.ultimoDiscurso5Min ? new Date(data.ultimoDiscurso5Min) : null,
+      salaUltimoDiscurso: data.salaUltimoDiscurso || null,
     },
   });
   revalidatePath('/mujeres');

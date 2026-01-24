@@ -18,6 +18,7 @@ model Persona {
   frecuencia            String
   observacion           String
   ultimoDiscurso5Min    DateTime?
+  salaUltimoDiscurso    String?  // 'A' | 'B' - Sala del último discurso de 5 min
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 }

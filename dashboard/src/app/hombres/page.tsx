@@ -10,7 +10,7 @@ export default async function HombresPage() {
     <PersonManagement 
       title="Publicadores" 
       initialData={data}
-      roleOptions={['Publicador', 'Acompañante']}
+      roleOptions={['Publicador', 'Acompañante', 'Discurso', 'Lectura Bíblica']}
       tipo="HOMBRE"
     />
   );

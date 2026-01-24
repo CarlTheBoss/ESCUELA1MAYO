@@ -1,6 +1,6 @@
 export type Sala = 'A' | 'B';
 export type RolMujer = 'Acompañante' | 'Publicadora';
-export type RolHombre = 'Acompañante' | 'Publicador';
+export type RolHombre = 'Acompañante' | 'Publicador' | 'Discurso' | 'Lectura Bíblica';
 
 export interface Persona {
   id: string;
@@ -12,4 +12,5 @@ export interface Persona {
   frecuencia: string;
   observacion: string;
   ultimoDiscurso5Min?: string; // ISO Date string
+  salaUltimoDiscurso?: Sala; // Sala del último discurso de 5 min
 }

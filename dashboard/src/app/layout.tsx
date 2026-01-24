@@ -15,9 +15,9 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body>
-        <div style={{ display: 'flex', minHeight: '100vh' }}>
+        <div className="app-container">
           <Sidebar />
-          <main style={{ flex: 1, marginLeft: '280px', padding: '2rem', minHeight: '100vh' }}>
+          <main className="main-content">
             <div className="container fade-in">
               {children}
             </div>
