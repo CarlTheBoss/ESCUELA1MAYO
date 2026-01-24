@@ -26,8 +26,9 @@
 
 html,
 body {
+  height: 100%;
+  overflow: hidden;
   max-width: 100vw;
-  overflow-x: hidden;
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
@@ -126,7 +127,6 @@ a {
 
 .table-container {
   width: 100%;
-  overflow-x: auto;
   border-radius: var(--radius);
 }
 
@@ -162,7 +162,7 @@ table {
     font-size: 0.8rem !important;
   }
   
-  .input, .select {
+  table .input, table .select {
     padding: 0.15rem !important;
     font-size: 0.7rem !important;
     height: auto;
@@ -192,6 +192,8 @@ th {
   letter-spacing: 0.05em;
   background: #f9fafb;
 }
+
+
 
 th:last-child {
   border-right: none;
@@ -308,7 +310,7 @@ td input, td select {
 /* Responsive Layout */
 .app-container {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
   position: relative;
 }
 
@@ -316,7 +318,8 @@ td input, td select {
   flex: 1;
   margin-left: 280px;
   padding: 2rem;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: auto; /* Permite scroll vertical y horizontal */
   min-width: 0; /* CRÍTICO: Permite que el scroll interno funcione */
   transition: margin-left 0.3s ease;
 }

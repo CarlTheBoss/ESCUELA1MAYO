@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Persona, Sala, RolMujer, RolHombre } from '@/types';
 import { Plus, Search, Trash2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { createPersona, updatePersona, deletePersona } from '@/app/actions';
 import { useRouter } from 'next/navigation';
 import WednesdayPicker from './WednesdayPicker';
@@ -193,27 +194,36 @@ export default function PersonManagement({ title, initialData, roleOptions, tipo
   };
 
   return (
-    <div>
-      <header className="page-header">
-        <div>
-          <h1 className="title">{title}</h1>
-          <p style={{ color: 'var(--secondary)', marginTop: '0.5rem', fontSize: '0.95rem' }}>Gestión de {title.toLowerCase()}</p>
-        </div>
-        <button onClick={handleCreateNew} className="btn btn-primary">
-          <Plus size={18} />
-          Nuevo Registro
-        </button>
-      </header>
-
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+    >
       <div className="glass" style={{ padding: '1.5rem', borderRadius: 'var(--radius)', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
           <div style={{ position: 'relative', flex: '1', minWidth: '250px', maxWidth: '400px' }}>
-            <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--secondary)' }} />
+            <Search size={18} style={{ 
+              position: 'absolute', 
+              left: '1rem', 
+              top: '50%', 
+              transform: 'translateY(-50%)', 
+              color: 'var(--secondary)',
+              pointerEvents: 'none',
+              zIndex: 1
+            }} />
             <input
               type="text"
               placeholder="Buscar por nombre..."
               className="input"
-              style={{ paddingLeft: '3rem', width: '100%', minWidth: '150px' }}
+              style={{ 
+                paddingLeft: '2.75rem', 
+                width: '100%', 
+                borderRadius: '10px',
+                background: '#f9fafb',
+                border: '1px solid #e5e7eb',
+                fontSize: '0.95rem',
+                transition: 'all 0.2s'
+              }}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -261,6 +271,11 @@ export default function PersonManagement({ title, initialData, roleOptions, tipo
               <option value="fecha-reciente">Fecha más reciente</option>
             </select>
           </div>
+
+          <button onClick={handleCreateNew} className="btn btn-primary" style={{ marginLeft: 'auto' }}>
+            <Plus size={18} />
+            Nuevo Registro
+          </button>
         </div>
         
         <div style={{ 
@@ -418,15 +433,27 @@ export default function PersonManagement({ title, initialData, roleOptions, tipo
                       ))}
                     </select>
                   </div>
-                  <div className="mobile-view" style={{ 
-                    fontSize: '0.85rem', 
-                    fontWeight: '500',
-                    background: '#f3f4f6',
-                    padding: '2px 6px',
-                    borderRadius: '4px',
-                    display: 'inline-block'
-                  }}>
-                    {abbreviateRole(currentPerson.rol)}
+                  <div className="mobile-view">
+                    <select
+                      value={currentPerson.rol}
+                      onChange={(e) => handleSelectChange(person, 'rol', e.target.value as any)}
+                      style={{
+                        background: '#f3f4f6',
+                        border: 'none',
+                        width: '100%',
+                        padding: '4px 2px',
+                        borderRadius: '4px',
+                        fontSize: '0.85rem',
+                        fontWeight: '500',
+                        cursor: 'pointer',
+                        color: '#1f2937',
+                        appearance: 'auto'
+                      }}
+                    >
+                      {roleOptions.map(role => (
+                        <option key={role} value={role}>{abbreviateRole(role)}</option>
+                      ))}
+                    </select>
                   </div>
                 </td>
                 <td>
@@ -531,6 +558,6 @@ export default function PersonManagement({ title, initialData, roleOptions, tipo
           </tbody>
         </table>
       </div>
-    </div>
+    </motion.div>
   );
 }
