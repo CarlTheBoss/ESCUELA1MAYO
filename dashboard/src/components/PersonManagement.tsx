@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { Persona, Sala, RolMujer, RolHombre } from '@/types';
-import { Plus, Search, Trash2 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Plus, Search, Trash2, ChevronDown, ChevronUp, Calendar, User, Clock, MessageSquare, Mic } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { createPersona, updatePersona, deletePersona } from '@/app/actions';
 import { useRouter } from 'next/navigation';
 import WednesdayPicker from './WednesdayPicker';
@@ -18,6 +18,14 @@ interface PersonManagementProps {
 export default function PersonManagement({ title, initialData, roleOptions, tipo }: PersonManagementProps) {
   const [data, setData] = useState<Persona[]>(initialData);
   const [editingPerson, setEditingPerson] = useState<Persona | null>(null); // Track editing state
+  const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({});
+
+  const toggleExpand = (id: string) => {
+    setExpandedCards(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
 
   useEffect(() => {
     setData(initialData);
@@ -199,12 +207,12 @@ export default function PersonManagement({ title, initialData, roleOptions, tipo
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
     >
-      <div className="glass" style={{ padding: '1.5rem', borderRadius: 'var(--radius)', marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
-          <div style={{ position: 'relative', flex: '1', minWidth: '250px', maxWidth: '400px' }}>
+      <div className="glass" style={{ padding: '1.25rem', borderRadius: '12px', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div style={{ position: 'relative', flex: '1 1 200px', minWidth: '180px' }}>
             <Search size={18} style={{ 
               position: 'absolute', 
-              left: '1rem', 
+              left: '0.85rem', 
               top: '50%', 
               transform: 'translateY(-50%)', 
               color: 'var(--secondary)',
@@ -216,89 +224,348 @@ export default function PersonManagement({ title, initialData, roleOptions, tipo
               placeholder="Buscar por nombre..."
               className="input"
               style={{ 
-                paddingLeft: '2.75rem', 
+                paddingLeft: '2.5rem', 
                 width: '100%', 
-                borderRadius: '10px',
-                background: '#f9fafb',
-                border: '1px solid #e5e7eb',
-                fontSize: '0.95rem',
-                transition: 'all 0.2s'
+                borderRadius: '8px',
+                background: 'var(--muted-bg)',
+                border: '1px solid var(--card-border)',
+                height: '42px',
+                fontSize: '0.95rem'
               }}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <label style={{ fontSize: '0.875rem', color: 'var(--secondary)', fontWeight: '500' }}>
-              Filtrar:
-            </label>
-            <select
-              value={filterRole}
-              onChange={(e) => setFilterRole(e.target.value)}
-              className="select"
-              style={{ 
-                padding: '0.5rem 2rem 0.5rem 0.75rem',
-                fontSize: '0.875rem',
-                cursor: 'pointer',
-                minWidth: '120px'
-              }}
-            >
-              <option value="Todos">Todos los roles</option>
-              {roleOptions.map(role => (
-                <option key={role} value={role}>{role}</option>
-              ))}
-            </select>
-          </div>
-          
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <label style={{ fontSize: '0.875rem', color: 'var(--secondary)', fontWeight: '500' }}>
-              Ordenar por:
-            </label>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="select"
-              style={{ 
-                padding: '0.5rem 2rem 0.5rem 0.75rem',
-                fontSize: '0.875rem',
-                cursor: 'pointer',
-                minWidth: '180px'
-              }}
-            >
-              <option value="nombre">Nombre (A-Z)</option>
-              <option value="fecha-antigua">Fecha más antigua</option>
-              <option value="fecha-reciente">Fecha más reciente</option>
-            </select>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', flex: '1 1 auto' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flex: '1 1 120px' }}>
+              <label style={{ fontSize: '0.8rem', color: 'var(--secondary)', fontWeight: '600' }}>
+                Rol:
+              </label>
+              <select
+                value={filterRole}
+                onChange={(e) => setFilterRole(e.target.value)}
+                className="select"
+                style={{ 
+                  padding: '0.45rem 1.75rem 0.45rem 0.6rem',
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
+                  height: '42px',
+                  width: '100%'
+                }}
+              >
+                <option value="Todos">Todos</option>
+                {roleOptions.map(role => (
+                  <option key={role} value={role}>{role}</option>
+                ))}
+              </select>
+            </div>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flex: '1 1 150px' }}>
+              <label style={{ fontSize: '0.8rem', color: 'var(--secondary)', fontWeight: '600' }}>
+                Orden:
+              </label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as any)}
+                className="select"
+                style={{ 
+                  padding: '0.45rem 1.75rem 0.45rem 0.6rem',
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
+                  height: '42px',
+                  width: '100%'
+                }}
+              >
+                <option value="nombre">Nombre (A-Z)</option>
+                <option value="fecha-antigua">Fecha más antigua</option>
+                <option value="fecha-reciente">Fecha más reciente</option>
+              </select>
+            </div>
           </div>
 
-          <button onClick={handleCreateNew} className="btn btn-primary" style={{ marginLeft: 'auto' }}>
+          <button 
+            onClick={handleCreateNew} 
+            className="btn btn-primary" 
+            style={{ 
+              height: '42px', 
+              padding: '0 1rem', 
+              whiteSpace: 'nowrap',
+              flex: '0 0 auto',
+              marginLeft: 'auto'
+            }}
+          >
             <Plus size={18} />
-            Nuevo Registro
+            <span>Nuevo</span>
           </button>
         </div>
         
         <div style={{ 
-          marginTop: '1rem',
-          padding: '0.75rem 1rem', 
-          background: '#eff6ff', 
-          borderLeft: '3px solid #8a1c2e',
+          marginTop: '0.85rem',
+          padding: '0.6rem 0.85rem', 
+          background: 'rgba(138, 28, 46, 0.08)', 
+          borderLeft: '3px solid var(--primary)',
           borderRadius: '4px',
-          fontSize: '0.875rem',
-          color: '#8a1c2e'
+          fontSize: '0.825rem',
+          color: 'var(--foreground)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem'
         }}>
-          💡 <strong>Tip:</strong> Los cambios se guardan al presionar <kbd style={{ 
-            padding: '2px 6px', 
-            background: 'white', 
-            border: '1px solid #cbd5e1',
-            borderRadius: '3px',
-            fontFamily: 'monospace',
-            fontSize: '0.85em'
-          }}>Enter</kbd> o al hacer click fuera del campo
+          <span>💡 <strong>Tip:</strong> Puedes editar directamente los campos. Se guardan solos al pulsar <kbd style={{ padding: '2px 4px', background: 'var(--muted-bg)', border: '1px solid var(--card-border)', color: 'var(--foreground)', borderRadius: '3px', fontSize: '0.8em' }}>Enter</kbd> o cambiar de campo.</span>
         </div>
       </div>
 
-      <div className="glass table-container" style={{ position: 'relative' }}>
+      {/* =========================================================================
+          VISTA MÓVIL (TARJETAS TOUCH-FRIENDLY)
+          ========================================================================= */}
+      <div className="mobile-cards-container">
+        {filteredData.length === 0 ? (
+          <div className="glass" style={{ padding: '2rem', textAlign: 'center', color: 'var(--secondary)', borderRadius: '12px' }}>
+            No se encontraron registros. Pulsa "+ Nuevo" para agregar uno.
+          </div>
+        ) : (
+          filteredData.map((person) => {
+            const currentPerson = getCurrentPerson(person);
+            const isExpanded = !!expandedCards[person.id];
+
+            return (
+              <div key={person.id} className="mobile-person-card">
+                {/* Cabecera de la tarjeta: Nombres y Botón Eliminar */}
+                <div className="mobile-person-card-header">
+                  <div className="mobile-card-title-group">
+                    <div className="mobile-name-input-group">
+                      <input
+                        type="text"
+                        value={currentPerson.nombre}
+                        placeholder="Nombre"
+                        onChange={(e) => handleFieldChange(person, 'nombre', e.target.value)}
+                        onKeyDown={(e) => handleSaveOnEnter(e, person)}
+                        onBlur={() => handleSaveOnBlur(person)}
+                        className="mobile-inline-input"
+                        style={{ fontSize: '1rem' }}
+                      />
+                      <input
+                        type="text"
+                        value={currentPerson.apellido}
+                        placeholder="Apellido"
+                        onChange={(e) => handleFieldChange(person, 'apellido', e.target.value)}
+                        onKeyDown={(e) => handleSaveOnEnter(e, person)}
+                        onBlur={() => handleSaveOnBlur(person)}
+                        className="mobile-inline-input"
+                        style={{ fontSize: '1rem' }}
+                      />
+                    </div>
+
+                    {/* Fila de Insignias: Rol y Selector Sala A/B */}
+                    <div className="mobile-badge-row">
+                      {/* Selector de Rol */}
+                      <select
+                        value={currentPerson.rol}
+                        onChange={(e) => handleSelectChange(person, 'rol', e.target.value as any)}
+                        style={{
+                          background: 'var(--muted-bg)',
+                          border: '1px solid var(--card-border)',
+                          padding: '0.35rem 0.6rem',
+                          borderRadius: '6px',
+                          fontWeight: '600',
+                          fontSize: '0.85rem',
+                          color: 'var(--foreground)'
+                        }}
+                      >
+                        {roleOptions.map(role => (
+                          <option key={role} value={role}>{role}</option>
+                        ))}
+                      </select>
+
+                      {/* Selector de Sala A/B con botones tipo pill */}
+                      <div style={{ display: 'inline-flex', borderRadius: '6px', overflow: 'hidden', border: '1px solid var(--card-border)' }}>
+                        <button
+                          type="button"
+                          onClick={() => handleSelectChange(person, 'sala', 'A')}
+                          style={{
+                            padding: '0.35rem 0.65rem',
+                            border: 'none',
+                            fontWeight: '700',
+                            fontSize: '0.8rem',
+                            cursor: 'pointer',
+                            background: currentPerson.sala === 'A' ? '#1d4ed8' : 'var(--muted-bg)',
+                            color: currentPerson.sala === 'A' ? 'white' : 'var(--secondary)',
+                            transition: 'all 0.15s'
+                          }}
+                        >
+                          Sala A
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleSelectChange(person, 'sala', 'B')}
+                          style={{
+                            padding: '0.35rem 0.65rem',
+                            border: 'none',
+                            fontWeight: '700',
+                            fontSize: '0.8rem',
+                            cursor: 'pointer',
+                            background: currentPerson.sala === 'B' ? '#6d28d9' : 'var(--muted-bg)',
+                            color: currentPerson.sala === 'B' ? 'white' : 'var(--secondary)',
+                            transition: 'all 0.15s'
+                          }}
+                        >
+                          Sala B
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Botón Borrar */}
+                  <button 
+                    onClick={() => handleDelete(person.id)} 
+                    className="btn btn-danger" 
+                    style={{ padding: '0.5rem', borderRadius: '8px', height: '36px', width: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    aria-label="Eliminar"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+
+                {/* Fecha de Asignación Principal (siempre visible para control rápido) */}
+                <div style={{ marginTop: '0.6rem' }}>
+                  <span className="mobile-field-label">Última Asignación</span>
+                  <div style={{ marginTop: '0.25rem' }}>
+                    <WednesdayPicker
+                      value={currentPerson.fechaUltimaAsignacion}
+                      onChange={(date) => handleSelectChange(person, 'fechaUltimaAsignacion', date)}
+                    />
+                  </div>
+                </div>
+
+                {/* Botón para expandir/colapsar detalles adicionales */}
+                <button
+                  type="button"
+                  onClick={() => toggleExpand(person.id)}
+                  className="mobile-expand-btn"
+                >
+                  {isExpanded ? (
+                    <>
+                      <span>Menos detalles</span>
+                      <ChevronUp size={16} />
+                    </>
+                  ) : (
+                    <>
+                      <span>Más detalles (Frecuencia, Observaciones{tipo === 'HOMBRE' ? ', Discurso' : ''})</span>
+                      <ChevronDown size={16} />
+                    </>
+                  )}
+                </button>
+
+                {/* Área expandible con los campos complementarios */}
+                {isExpanded && (
+                  <div className="mobile-field-grid">
+                    {/* Frecuencia */}
+                    <div className="mobile-field-item">
+                      <span className="mobile-field-label">Frecuencia</span>
+                      <input
+                        type="text"
+                        value={currentPerson.frecuencia}
+                        placeholder="Ej. Cada mes, cada 2 semanas..."
+                        onChange={(e) => handleFieldChange(person, 'frecuencia', e.target.value)}
+                        onKeyDown={(e) => handleSaveOnEnter(e, person)}
+                        onBlur={() => handleSaveOnBlur(person)}
+                        className="mobile-inline-input"
+                        style={{ fontSize: '0.9rem' }}
+                      />
+                    </div>
+
+                    {/* Observaciones */}
+                    <div className="mobile-field-item">
+                      <span className="mobile-field-label">Observación</span>
+                      <textarea
+                        value={currentPerson.observacion}
+                        placeholder="Notas u observaciones sobre la persona..."
+                        onChange={(e) => handleFieldChange(person, 'observacion', e.target.value)}
+                        onKeyDown={(e) => handleSaveOnEnter(e, person)}
+                        onBlur={() => handleSaveOnBlur(person)}
+                        rows={2}
+                        className="mobile-inline-input"
+                        style={{ 
+                          fontSize: '0.9rem', 
+                          resize: 'vertical', 
+                          minHeight: '44px',
+                          lineHeight: '1.3' 
+                        }}
+                      />
+                    </div>
+
+                    {/* Campos extras de Discurso para Hombres */}
+                    {tipo === 'HOMBRE' && (
+                      <div style={{ background: 'var(--muted-bg)', padding: '0.6rem', borderRadius: '8px', border: '1px solid var(--card-border)', marginTop: '0.25rem' }}>
+                        <span className="mobile-field-label" style={{ color: 'var(--secondary)' }}>Último Discurso de 5 Min</span>
+                        <div style={{ marginTop: '0.35rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                          <WednesdayPicker
+                            value={currentPerson.ultimoDiscurso5Min || ''}
+                            onChange={(date) => handleSelectChange(person, 'ultimoDiscurso5Min', date || undefined)}
+                          />
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontSize: '0.8rem', color: 'var(--secondary)', fontWeight: '600' }}>Sala Discurso:</span>
+                            <div style={{ display: 'inline-flex', borderRadius: '6px', overflow: 'hidden', border: '1px solid var(--card-border)' }}>
+                              <button
+                                type="button"
+                                onClick={() => handleSelectChange(person, 'salaUltimoDiscurso', undefined)}
+                                style={{
+                                  padding: '0.25rem 0.5rem',
+                                  border: 'none',
+                                  fontSize: '0.75rem',
+                                  cursor: 'pointer',
+                                  background: !currentPerson.salaUltimoDiscurso ? 'var(--secondary)' : 'var(--card-bg)',
+                                  color: !currentPerson.salaUltimoDiscurso ? 'white' : 'var(--secondary)'
+                                }}
+                              >
+                                Ninguna
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleSelectChange(person, 'salaUltimoDiscurso', 'A')}
+                                style={{
+                                  padding: '0.25rem 0.5rem',
+                                  border: 'none',
+                                  fontSize: '0.75rem',
+                                  cursor: 'pointer',
+                                  background: currentPerson.salaUltimoDiscurso === 'A' ? '#1d4ed8' : 'var(--card-bg)',
+                                  color: currentPerson.salaUltimoDiscurso === 'A' ? 'white' : 'var(--secondary)'
+                                }}
+                              >
+                                Sala A
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleSelectChange(person, 'salaUltimoDiscurso', 'B')}
+                                style={{
+                                  padding: '0.25rem 0.5rem',
+                                  border: 'none',
+                                  fontSize: '0.75rem',
+                                  cursor: 'pointer',
+                                  background: currentPerson.salaUltimoDiscurso === 'B' ? '#6d28d9' : 'var(--card-bg)',
+                                  color: currentPerson.salaUltimoDiscurso === 'B' ? 'white' : 'var(--secondary)'
+                                }}
+                              >
+                                Sala B
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* =========================================================================
+          VISTA ESCRITORIO (TABLA CLÁSICA COMPLETA)
+          ========================================================================= */}
+      <div className="glass table-container table-desktop-container" style={{ position: 'relative' }}>
         <table>
           <thead>
             <tr>
@@ -393,13 +660,13 @@ export default function PersonManagement({ title, initialData, roleOptions, tipo
                     value={currentPerson.sala}
                     onChange={(e) => handleSelectChange(person, 'sala', e.target.value as Sala)}
                     style={{
-                      color: currentPerson.sala === 'A' ? '#000000ff' : '#000000ff',
-                      background: currentPerson.sala === 'A' ? '#eff6ff' : '#f5f3ff',
+                      color: currentPerson.sala === 'A' ? '#1d4ed8' : '#7c3aed',
+                      background: currentPerson.sala === 'A' ? 'rgba(29, 78, 216, 0.15)' : 'rgba(124, 58, 237, 0.15)',
                       border: 'none',
                       borderRadius: 'var(--radius)',
                       padding: '4px 2px',
                       fontSize: '0.875rem',
-                      fontWeight: '600',
+                      fontWeight: '700',
                       cursor: 'pointer'
                     }}
                   >
@@ -413,15 +680,15 @@ export default function PersonManagement({ title, initialData, roleOptions, tipo
                       value={currentPerson.rol}
                       onChange={(e) => handleSelectChange(person, 'rol', e.target.value as any)}
                       style={{
-                        background: '#f9fafb',
-                        border: '1px solid #e5e7eb',
+                        background: 'var(--muted-bg)',
+                        border: '1px solid var(--card-border)',
                         width: '100%',
-                        minWidth: '100px', // Reduced from 140px
+                        minWidth: '100px',
                         padding: '8px 4px',
                         borderRadius: 'var(--radius)',
                         fontSize: '0.875rem',
                         cursor: 'pointer',
-                        color: '#1f2937',
+                        color: 'var(--foreground)',
                         fontWeight: '500',
                         appearance: 'auto',
                         WebkitAppearance: 'menulist',
@@ -438,7 +705,7 @@ export default function PersonManagement({ title, initialData, roleOptions, tipo
                       value={currentPerson.rol}
                       onChange={(e) => handleSelectChange(person, 'rol', e.target.value as any)}
                       style={{
-                        background: '#f3f4f6',
+                        background: 'var(--muted-bg)',
                         border: 'none',
                         width: '100%',
                         padding: '4px 2px',
@@ -446,7 +713,7 @@ export default function PersonManagement({ title, initialData, roleOptions, tipo
                         fontSize: '0.85rem',
                         fontWeight: '500',
                         cursor: 'pointer',
-                        color: '#1f2937',
+                        color: 'var(--foreground)',
                         appearance: 'auto'
                       }}
                     >
@@ -519,10 +786,9 @@ export default function PersonManagement({ title, initialData, roleOptions, tipo
                       value={currentPerson.salaUltimoDiscurso || ''}
                       onChange={(e) => handleSelectChange(person, 'salaUltimoDiscurso', e.target.value || undefined)}
                       style={{
-                        color: !currentPerson.salaUltimoDiscurso ? '#6b7280' : 
-                               currentPerson.salaUltimoDiscurso === 'A' ? '#000000ff' : '#000000ff',
-                        background: !currentPerson.salaUltimoDiscurso ? '#f3f4f6' :
-                                   currentPerson.salaUltimoDiscurso === 'A' ? '#eff6ff' : '#f5f3ff',
+                        color: !currentPerson.salaUltimoDiscurso ? 'var(--secondary)' : 'var(--foreground)',
+                        background: !currentPerson.salaUltimoDiscurso ? 'var(--muted-bg)' :
+                                   currentPerson.salaUltimoDiscurso === 'A' ? 'rgba(29, 78, 216, 0.15)' : 'rgba(109, 40, 217, 0.15)',
                         border: 'none',
                         borderRadius: 'var(--radius)',
                         padding: '4px 2px',

@@ -87,10 +87,12 @@ export default function WednesdayPicker({ value, onChange, style }: WednesdayPic
           background: 'var(--accent)',
           color: 'white',
           fontWeight: '600',
-          padding: '4px 8px',
+          padding: '6px 10px',
+          minHeight: '36px',
           borderRadius: '6px',
           border: 'none',
           transition: 'all 0.2s',
+          fontSize: '0.9rem'
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.background = '#9a7609';
@@ -100,7 +102,7 @@ export default function WednesdayPicker({ value, onChange, style }: WednesdayPic
         }}
       >
         <span style={{ fontSize: '0.875rem' }}>{displayValue}</span>
-        <span style={{ fontSize: '0.7rem', marginLeft: '8px' }}>▼</span>
+        <span style={{ fontSize: '0.75rem', marginLeft: '6px' }}>▼</span>
       </button>
 
       {isOpen && (
@@ -126,10 +128,10 @@ export default function WednesdayPicker({ value, onChange, style }: WednesdayPic
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
-              background: 'white',
+              background: 'var(--card-bg)',
               border: '2px solid var(--accent)',
               borderRadius: '12px',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.4)',
               zIndex: 1000,
               width: 'calc(100vw - 2rem)',
               maxWidth: '400px',
@@ -262,9 +264,9 @@ export default function WednesdayPicker({ value, onChange, style }: WednesdayPic
                         textAlign: 'left',
                         background: isSelected 
                           ? 'linear-gradient(135deg, var(--accent) 0%, #9a7609 100%)' 
-                          : '#f9fafb',
-                        color: isSelected ? 'white' : '#1f2937',
-                        border: isSelected ? '2px solid #9a7609' : '2px solid #e5e7eb',
+                          : 'var(--muted-bg)',
+                        color: isSelected ? 'white' : 'var(--foreground)',
+                        border: isSelected ? '2px solid #9a7609' : '1px solid var(--card-border)',
                         borderRadius: '10px',
                         cursor: 'pointer',
                         fontSize: 'clamp(0.875rem, 3vw, 1rem)',
@@ -273,22 +275,18 @@ export default function WednesdayPicker({ value, onChange, style }: WednesdayPic
                         marginBottom: '0.75rem',
                         boxShadow: isSelected 
                           ? '0 4px 12px rgba(184, 139, 11, 0.3)' 
-                          : '0 1px 3px rgba(0,0,0,0.05)',
+                          : 'var(--shadow)',
                       }}
                       onMouseEnter={(e) => {
                         if (!isSelected) {
-                          e.currentTarget.style.background = '#fffbeb'; // Light orange/yellow bg
                           e.currentTarget.style.borderColor = 'var(--accent)';
                           e.currentTarget.style.transform = 'translateY(-2px)';
-                          e.currentTarget.style.boxShadow = '0 4px 12px rgba(184, 139, 11, 0.15)';
                         }
                       }}
                       onMouseLeave={(e) => {
                         if (!isSelected) {
-                          e.currentTarget.style.background = '#f9fafb';
-                          e.currentTarget.style.borderColor = '#e5e7eb';
+                          e.currentTarget.style.borderColor = 'var(--card-border)';
                           e.currentTarget.style.transform = 'translateY(0)';
-                          e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)';
                         }
                       }}
                     >
@@ -302,9 +300,10 @@ export default function WednesdayPicker({ value, onChange, style }: WednesdayPic
                         <span style={{ fontWeight: '700' }}>{formatDate(wednesday)}</span>
                         <span style={{ 
                           fontSize: 'clamp(0.75rem, 2.5vw, 0.875rem)',
-                          opacity: isSelected ? 0.9 : 0.6,
+                          opacity: isSelected ? 0.9 : 0.7,
                           fontWeight: '600',
-                          background: isSelected ? 'rgba(255,255,255,0.2)' : '#e5e7eb',
+                          background: isSelected ? 'rgba(255,255,255,0.2)' : 'var(--card-border)',
+                          color: isSelected ? 'white' : 'var(--foreground)',
                           padding: '0.25rem 0.75rem',
                           borderRadius: '999px',
                         }}>

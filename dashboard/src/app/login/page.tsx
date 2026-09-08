@@ -30,14 +30,15 @@ export default function LoginPage() {
       minHeight: '100vh',
       alignItems: 'center',
       justifyContent: 'center',
-      background: '#f3f4f6'
+      background: 'var(--background)',
+      padding: '1rem'
     }}>
       <div className="glass" style={{
         padding: '2rem',
         width: '100%',
         maxWidth: '400px',
-        borderRadius: 'var(--radius)',
-        background: 'white'
+        borderRadius: '12px',
+        background: 'var(--card-bg)'
       }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <h1 style={{ 
@@ -77,8 +78,9 @@ export default function LoginPage() {
           {error && (
             <div style={{
               padding: '0.75rem',
-              background: '#fee2e2',
-              color: '#dc2626',
+              background: 'rgba(220, 38, 38, 0.15)',
+              border: '1px solid rgba(220, 38, 38, 0.3)',
+              color: 'var(--danger)',
               borderRadius: 'var(--radius)',
               marginBottom: '1rem',
               fontSize: '0.875rem',

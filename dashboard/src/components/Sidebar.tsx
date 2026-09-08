@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { logout } from '@/app/actions/auth';
-import { Users, UserCircle, LayoutDashboard, Settings, Menu, X, LogOut } from 'lucide-react';
+import { Users, UserCircle, LayoutDashboard, Settings, Menu, X, LogOut, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const menuItems = [
@@ -17,7 +17,21 @@ const menuItems = [
 export default function Sidebar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [isDark, setIsDark] = useState(false);
   const router = useRouter();
+
+  // Sincronizar tema con localStorage y atributo html
+  useEffect(() => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    setIsDark(currentTheme === 'dark');
+  }, []);
+
+  const toggleTheme = () => {
+    const nextTheme = isDark ? 'light' : 'dark';
+    setIsDark(!isDark);
+    document.documentElement.setAttribute('data-theme', nextTheme);
+    localStorage.setItem('theme', nextTheme);
+  };
 
   // Close sidebar when route changes
   useEffect(() => {
@@ -46,14 +60,34 @@ export default function Sidebar() {
           }}>
             <LayoutDashboard color="white" size={18} />
           </div>
-          <span style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>Escuela</span>
+          <span style={{ fontWeight: 'bold', fontSize: '1.1rem', color: 'var(--foreground)' }}>Escuela</span>
         </div>
-        <button 
-          onClick={() => setIsOpen(!isOpen)}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label="Cambiar tema"
+            style={{
+              background: 'var(--card-bg)',
+              border: '1px solid var(--card-border)',
+              borderRadius: '8px',
+              padding: '6px',
+              cursor: 'pointer',
+              color: 'var(--foreground)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            {isDark ? <Sun size={20} color="#f59e0b" /> : <Moon size={20} color="#64748b" />}
+          </button>
+          <button 
+            onClick={() => setIsOpen(!isOpen)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: 'var(--foreground)' }}
+          >
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Overlay */}
@@ -122,7 +156,27 @@ export default function Sidebar() {
           })}
         </nav>
 
-        <div style={{ marginTop: 'auto', paddingTop: '1.5rem', borderTop: '1px solid var(--card-border)' }}>
+        <div style={{ marginTop: 'auto', paddingTop: '1.5rem', borderTop: '1px solid var(--card-border)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <div 
+            onClick={toggleTheme}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              color: 'var(--secondary)',
+              padding: '10px 12px',
+              cursor: 'pointer',
+              borderRadius: 'var(--radius)',
+              transition: 'all 0.2s',
+              fontSize: '0.95rem',
+              fontWeight: '500'
+            }}
+            className="glass-hover"
+          >
+            {isDark ? <Sun size={20} color="#f59e0b" /> : <Moon size={20} />}
+            <span>{isDark ? 'Modo Claro' : 'Modo Oscuro'}</span>
+          </div>
+
           <div 
             onClick={handleLogout}
             style={{
@@ -138,7 +192,7 @@ export default function Sidebar() {
               fontWeight: '500'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#fee2e2';
+              e.currentTarget.style.background = 'rgba(220, 38, 38, 0.15)';
               e.currentTarget.style.color = '#dc2626';
             }}
             onMouseLeave={(e) => {
