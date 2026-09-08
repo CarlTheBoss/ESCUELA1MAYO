@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Users, Calendar, UserCheck, ArrowRight } from 'lucide-react';
+import { Users, Calendar, UserCheck, ArrowRight, FileText } from 'lucide-react';
 import Link from 'next/link';
 
 interface DashboardStats {
@@ -163,6 +163,17 @@ export default function DashboardClient({ stats }: { stats: DashboardStats }) {
             <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <UserCheck size={18} color="var(--accent)" />
               Gestionar Publicadores
+            </span>
+            <ArrowRight size={16} />
+          </Link>
+          <Link 
+            href="/asignaciones" 
+            className="btn btn-secondary" 
+            style={{ justifyContent: 'space-between', padding: '0.85rem 1rem', width: '100%', fontSize: '0.95rem' }}
+          >
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <FileText size={18} color="var(--primary)" />
+              Generar Asignaciones S-89
             </span>
             <ArrowRight size={16} />
           </Link>

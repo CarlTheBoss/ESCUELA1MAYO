@@ -5,13 +5,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { logout } from '@/app/actions/auth';
-import { Users, UserCircle, LayoutDashboard, Settings, Menu, X, LogOut, Sun, Moon } from 'lucide-react';
+import { Users, UserCircle, LayoutDashboard, Settings, Menu, X, LogOut, Sun, Moon, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', href: '/' },
   { icon: Users, label: 'Publicadoras', href: '/mujeres' },
   { icon: UserCircle, label: 'Publicadores', href: '/hombres' },
+  { icon: FileText, label: 'Asignaciones S-89', href: '/asignaciones' },
 ];
 
 export default function Sidebar() {

@@ -4,6 +4,7 @@ export type RolHombre = 'Acompa√±ante' | 'Publicador' | 'Discurso' | 'Lectura B√
 
 export interface Persona {
   id: string;
+  tipo?: 'MUJER' | 'HOMBRE';
   nombre: string;
   apellido: string;
   fechaUltimaAsignacion: string; // ISO Date string

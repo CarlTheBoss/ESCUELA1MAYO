@@ -20,6 +20,24 @@ export async function getPersonas(tipo: 'MUJER' | 'HOMBRE') {
   }));
 }
 
+export async function getAllPersonas() {
+  const personas = await prisma.persona.findMany({
+    orderBy: [
+      { nombre: 'asc' },
+      { apellido: 'asc' }
+    ]
+  });
+
+  return personas.map((p: any) => ({
+    ...p,
+    fechaUltimaAsignacion: p.fechaUltimaAsignacion.toISOString().split('T')[0],
+    sala: p.sala as any,
+    rol: p.rol as any,
+    ultimoDiscurso5Min: p.ultimoDiscurso5Min ? p.ultimoDiscurso5Min.toISOString().split('T')[0] : undefined,
+    salaUltimoDiscurso: p.salaUltimoDiscurso as any,
+  }));
+}
+
 export async function createPersona(data: Persona, tipo: 'MUJER' | 'HOMBRE') {
   await prisma.persona.create({
     data: {
